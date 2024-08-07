@@ -33,7 +33,7 @@ class QuizStart extends Command
     {
         $triviaUrl = 'https://opentdb.com/api.php?';
 
-        note('🧑‍💻Welcome to the Quiz Central!👩‍💻');
+        note('🧑‍💻Welcome to Quiz Central!👩‍💻');
         pause('Press enter to continue...');
         info('Please select the following options:');
 
@@ -134,9 +134,13 @@ class QuizStart extends Command
         );
 
         if ($incorrectAnswers) {
-            warning("You got {$incorrectAnswers} incorrect answer(s).🙏");
+            warning("😔 You got {$incorrectAnswers} incorrect answer(s).🙏");
         }
 
-        outro("Your quiz settings: Selected limit: {$limit}, difficulty level: {$difficultyLevel}, Category: {$category} and answer type: {$quizType} 🚀");
+        $difficultyLevel = ucfirst($difficultyLevel);
+        $category = Category::where('value', $category)->first()->label;
+        $quizType = ucfirst($quizType);
+
+        outro("🚀 Your quiz settings: Quiz Limit: {$limit}, Difficulty Level: {$difficultyLevel}, Category: {$category} and Answer Type: {$quizType} 🚀");
     }
 }
