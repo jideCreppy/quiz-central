@@ -71,9 +71,9 @@ class QuizStart extends Command
 
         $triviaResponse = $triviaResponse['results'];
 
-        $quizForm = form();
         $answers = [];
         $result = [];
+        $quizForm = form();
         $incorrectAnswers = 0;
 
         foreach ($triviaResponse as $question) {
@@ -99,6 +99,8 @@ class QuizStart extends Command
 
         if ($incorrectAnswers) {
             warning("😔 You got {$incorrectAnswers} incorrect answer(s) out of {$limit} 🙏");
+        } else {
+            info('🎉 You got all the answers correct! Thank you for taking the quiz! 🎉');
         }
 
         $this->displayFinalOutro($difficultyLevel, $category, $quizType, $limit);
