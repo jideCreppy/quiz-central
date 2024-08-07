@@ -6,9 +6,20 @@ use App\Models\Category;
 use App\Models\Difficulty;
 use App\Models\QuizType;
 use Illuminate\Console\Command;
-
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use function Laravel\Prompts\{error, form, info, note, outro, progress, select, spin, table, text, warning};
+
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\form;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\note;
+use function Laravel\Prompts\outro;
+use function Laravel\Prompts\progress;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\spin;
+use function Laravel\Prompts\table;
+use function Laravel\Prompts\text;
+use function Laravel\Prompts\warning;
 
 class QuizStart extends Command
 {
@@ -93,21 +104,11 @@ class QuizStart extends Command
         $this->displayFinalOutro($difficultyLevel, $category, $quizType, $limit);
     }
 
-    /**
-     * @param  int  $limit
-     * @param  int  $category
-     * @param  string  $difficultyLevel
-     * @param  string  $quizType
-     * @return string
-     */
     public function buildTriviaEndpoint(int $limit, int $category, string $difficultyLevel, string $quizType): string
     {
         return 'https://opentdb.com/api.php?'.'amount='.$limit.'&category='.$category.'&difficulty='.$difficultyLevel.'&type='.$quizType;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return (int) text(
@@ -124,9 +125,6 @@ class QuizStart extends Command
         );
     }
 
-    /**
-     * @return int
-     */
     public function getCategory(): int
     {
         return (int) select(
@@ -138,10 +136,7 @@ class QuizStart extends Command
         );
     }
 
-    /**
-     * @return int|string
-     */
-    public function getDifficultyLevel(): string|int
+    public function getDifficultyLevel(): string
     {
         return select(
             label: 'Select a difficulty:',
@@ -152,10 +147,7 @@ class QuizStart extends Command
         );
     }
 
-    /**
-     * @return int|string
-     */
-    public function getQuizType(): string|int
+    public function getQuizType(): string
     {
         return select(
             label: 'Select the type of answer for the quiz:',
@@ -166,14 +158,7 @@ class QuizStart extends Command
         );
     }
 
-    /**
-     * @param  int  $limit
-     * @param  int  $category
-     * @param  string  $difficultyLevel
-     * @param  string  $quizType
-     * @return mixed
-     */
-    public function fetchQuiz(int $limit, int $category, string $difficultyLevel, string $quizType): mixed
+    public function fetchQuiz(int $limit, int $category, string $difficultyLevel, string $quizType): array|bool
     {
         return spin(function () use ($limit, $category, $difficultyLevel, $quizType) {
             $response = Http::get($this->buildTriviaEndpoint($limit, $category, $difficultyLevel, $quizType));
@@ -187,22 +172,14 @@ class QuizStart extends Command
         }, 'Fetching Questions...');
     }
 
-    /**
-     * @param  mixed  $triviaResponse
-     * @return void
-     */
     public function checkSuccessfulApiCall(mixed $triviaResponse): void
     {
-        if (!$triviaResponse || $triviaResponse['response_code'] != 0 || count($triviaResponse['results']) <= 0) {
-            error("Sorry! Something went wrong. Please try again.🙏");
+        if (! $triviaResponse || $triviaResponse['response_code'] != 0 || count($triviaResponse['results']) <= 0) {
+            error('Sorry! Something went wrong. Please try again.🙏');
             exit;
         }
     }
 
-    /**
-     * @param  array  $result
-     * @return void
-     */
     public function getResultStats(array $result): void
     {
         table(
@@ -211,13 +188,6 @@ class QuizStart extends Command
         );
     }
 
-    /**
-     * @param  string  $difficultyLevel
-     * @param  int  $category
-     * @param  string  $quizType
-     * @param  int  $limit
-     * @return void
-     */
     public function displayFinalOutro(string $difficultyLevel, int $category, string $quizType, int $limit): void
     {
         $difficultyLevel = ucfirst($difficultyLevel);
