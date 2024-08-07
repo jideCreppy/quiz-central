@@ -13,6 +13,12 @@
 2. Change directory to the project folder
 
 ```php
+Run touch database/database.sqlite
+
+If you are on a windows pc you should create the database.sqlite file in the database directory similar to the above command.
+```
+
+```php
 Run composer install
 Run php artisan migrate:fresh --seed
 Run php artisan app:quiz-start
