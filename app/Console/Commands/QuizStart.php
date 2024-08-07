@@ -33,8 +33,7 @@ class QuizStart extends Command
     {
         $triviaUrl = 'https://opentdb.com/api.php?';
 
-        note('🧑‍💻Welcome to Quiz Central!👩‍💻');
-        pause('Press enter to continue...');
+        note('🧑‍💻 Welcome to Quiz Central! 👩‍💻');
         info('Please select the following options:');
 
         $progressBar = progress('Initializing..', steps: 5, hint: "Let's set up your quiz.");
@@ -112,7 +111,7 @@ class QuizStart extends Command
                 $answers[$question['question']]['correct'] = $question['correct_answer'];
                 $answers[$question['question']]['incorrect'] = $question['incorrect_answers'];
 
-                $quizForm->select(label: htmlspecialchars_decode($question['question']), options: ['True', 'False'], name: $question['question']);
+                $quizForm->select(label: html_entity_decode($question['question']), options: ['True', 'False'], name: $question['question']);
             }
         }
 
