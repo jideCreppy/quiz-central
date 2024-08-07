@@ -8,7 +8,7 @@ use App\Models\QuizType;
 use Illuminate\Console\Command;
 
 use Illuminate\Support\Facades\Http;
-use function Laravel\Prompts\{info, note, outro, pause, progress, select, spin, text};
+use function Laravel\Prompts\{form, info, note, outro, pause, progress, select, spin, table, text, warning};
 
 class QuizStart extends Command
 {
@@ -96,6 +96,47 @@ class QuizStart extends Command
 
         $triviaResponse = spin(fn () => Http::get($triviaUrl)->json(), 'Fetching Questions...');
 
-        outro("Selected limit : {$limit}, difficulty level : {$difficultyLevel}, Category : {$category} and answer type : {$quizType}🚀");
+        if($triviaResponse['response_code'] === 0 && count($triviaResponse['results']) > 0) {
+            $triviaResponse = $triviaResponse['results'];
+        } else {
+            outro("Sorry! Something went wrong. Please try again.🙏");
+        }
+
+        $quizForm = form();
+        $answers = [];
+
+        foreach ($triviaResponse as $question) {
+
+            if ($quizType == 'boolean') {
+                $answers[$question['question']]['question'] = htmlspecialchars_decode($question['question']);
+                $answers[$question['question']]['correct'] = $question['correct_answer'];
+                $answers[$question['question']]['incorrect'] = $question['incorrect_answers'];
+
+                $quizForm->select(label: htmlspecialchars_decode($question['question']), options: ['True', 'False'], name: $question['question']);
+            }
+        }
+
+        $quizForm = $quizForm->submit();
+
+        $result = [];
+        $incorrectAnswers = 0;
+
+        foreach ($answers as $question => $answer) {
+            if ($quizForm[$question] != $answer['correct']) {
+                $incorrectAnswers++;
+            }
+            $result[] = [html_entity_decode($question), $quizForm[$question], $answer['correct']];
+        }
+
+        table(
+            headers: ['Quiz', 'Your Answer', 'Correct Answer'],
+            rows: $result,
+        );
+
+        if ($incorrectAnswers) {
+            warning("You got {$incorrectAnswers} incorrect answer(s).🙏");
+        }
+
+        outro("Your quiz settings: Selected limit: {$limit}, difficulty level: {$difficultyLevel}, Category: {$category} and answer type: {$quizType} 🚀");
     }
 }
