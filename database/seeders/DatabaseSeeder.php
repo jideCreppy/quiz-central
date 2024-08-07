@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Difficulty;
+use App\Models\QuizType;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,11 +16,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        Category::factory()->create([
+            'label' => 'Entertainment (Film)',
+            'value' => 11,
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        Category::factory()->create([
+            'label' => 'Science & Nature',
+            'value' => 17,
+        ]);
+
+        Category::factory()->create([
+            'label' => 'History',
+            'value' => 23,
+        ]);
+
+        Difficulty::factory()->create([
+            'label' => 'Easy',
+            'value' => 'easy',
+        ]);
+
+        Difficulty::factory()->create([
+            'label' => 'Medium',
+            'value' => 'medium',
+        ]);
+
+        Difficulty::factory()->create([
+            'label' => 'Hard',
+            'value' => 'hard',
+        ]);
+
+        QuizType::factory()->create([
+            'label' => 'True / False',
+            'value' => 'boolean',
+        ]);
+
+        QuizType::factory()->create([
+            'label' => 'Multiple Choice',
+            'value' => 'multiple',
         ]);
     }
 }
