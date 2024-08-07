@@ -27,10 +27,6 @@ Create a copy of the .env.example and rename it to .env
 
 Run php artisan key:generate
 
-Run touch database/database.sqlite
-
-If you are on a windows pc you should create the database.sqlite file in the database directory similar to the above command.
-
 Update your database .env variables to the following:
 
 DB_CONNECTION=sqlite
