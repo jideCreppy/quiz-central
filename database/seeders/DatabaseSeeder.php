@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Difficulty;
 use App\Models\QuizType;
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -51,9 +50,9 @@ class DatabaseSeeder extends Seeder
             'value' => 'boolean',
         ]);
 
-//        QuizType::factory()->create([
-//            'label' => 'Multiple Choice',
-//            'value' => 'multiple',
-//        ]);
+        //        QuizType::factory()->create([
+        //            'label' => 'Multiple Choice',
+        //            'value' => 'multiple',
+        //        ]);
     }
 }
