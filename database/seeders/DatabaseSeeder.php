@@ -50,9 +50,9 @@ class DatabaseSeeder extends Seeder
             'value' => 'boolean',
         ]);
 
-        //        QuizType::factory()->create([
-        //            'label' => 'Multiple Choice',
-        //            'value' => 'multiple',
-        //        ]);
+        QuizType::factory()->create([
+            'label' => 'Multiple Choice',
+            'value' => 'multiple',
+        ]);
     }
 }

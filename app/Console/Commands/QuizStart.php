@@ -68,7 +68,12 @@ class QuizStart extends Command
         $category = $this->getCategory();
         $difficulty = $this->getDifficultyLevel();
         $quizType = $this->getQuizType();
-        $triviaResponse = $this->fetchQuiz($limit, $category, $difficulty, $quizType);
+        $triviaResponse = $this->fetchQuiz(
+            $limit,
+            $category,
+            $difficulty,
+            $quizType
+        );
         $this->checkSuccessfulApiCall($triviaResponse);
         $triviaResponse = $triviaResponse['results'];
 
@@ -76,19 +81,28 @@ class QuizStart extends Command
         $result = [];
         $quizForm = form();
         $incorrectAnswers = 0;
-
+;
         foreach ($triviaResponse as $question) {
-            if ($quizType == 'boolean') {
-                $answers[$question['question']]['question'] = htmlspecialchars_decode($question['question']);
-                $answers[$question['question']]['correct'] = $question['correct_answer'];
-                $answers[$question['question']]['incorrect'] = $question['incorrect_answers'];
+            $options = ['True', 'False'];
 
-                $quizForm->select(
-                    label: html_entity_decode($question['question']),
-                    options: ['True', 'False'],
-                    name: $question['question']
-                );
+            $questionKey = $question['question'];
+
+            if ($quizType == 'boolean') {
+                $answers[$questionKey]['question'] = htmlspecialchars_decode($questionKey);
+                $answers[$questionKey]['correct'] = $question['correct_answer'];
+                $answers[$questionKey]['incorrect'] = $question['incorrect_answers'];
+            } else if ($quizType == 'multiple') {
+                $options = array_merge($question['incorrect_answers'], [$question['correct_answer']]);
+                $answers[$questionKey]['question'] = htmlspecialchars_decode($questionKey);
+                $answers[$questionKey]['correct'] = $question['correct_answer'];
+                $answers[$questionKey]['incorrect'] = $question['incorrect_answers'];
             }
+
+            $quizForm->select(
+                label: html_entity_decode($question['question']),
+                options: $options,
+                name: $question['question']
+            );
         }
 
         $quizForm = $quizForm->submit();
