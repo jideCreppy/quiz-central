@@ -41,3 +41,4 @@ DB_CONNECTION=sqlite
 Run php artisan migrate:fresh --seed
 Run php artisan app:quiz-start
 ```
+### Have Fun!!!
