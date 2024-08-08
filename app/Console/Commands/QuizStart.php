@@ -8,6 +8,7 @@ use App\Models\QuizType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
+use Laravel\Prompts\Progress;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\form;
@@ -38,7 +39,7 @@ class QuizStart extends Command
     protected $description = 'Launch Quiz Central in the terminal';
 
 
-    protected $progressBar;
+    protected array|Progress $progressBar;
 
     public function __construct()
     {
