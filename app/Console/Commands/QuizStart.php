@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Console\Commands\Traits\TriviaCommands;
 use App\Models\Category;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Laravel\Prompts\Progress;
 
@@ -128,13 +129,20 @@ class QuizStart extends Command
     public function fetchQuiz(int $limit, int $category, string $difficultyLevel, string $quizType): array|bool
     {
         return spin(function () use ($limit, $category, $difficultyLevel, $quizType) {
-            $response = Http::get($this->buildTriviaEndpoint($limit, $category, $difficultyLevel, $quizType));
 
-            if ($response->failed()) {
+            try {
+                $response = Http::get($this->buildTriviaEndpoint($limit, $category, $difficultyLevel, $quizType));
+
+                if ($response->failed() || $response->serverError() || $response->clientError()) {
+                    return false;
+                }
+
+                return $response->json();
+
+            } catch (ConnectionException $exception) {
                 return false;
             }
 
-            return $response->json();
 
         }, 'Fetching Questions...');
     }
