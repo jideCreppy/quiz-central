@@ -40,8 +40,10 @@ class QuizStart extends Command
 
     public function __construct()
     {
-        $this->manageProgress();
         parent::__construct();
+
+        $this->displayIntro();
+        $this->manageProgress();
     }
 
     /**
@@ -49,16 +51,12 @@ class QuizStart extends Command
      */
     public function handle(): void
     {
-        $this->intro();
-
         [$difficulty, $category, $quizType, $limit] = $this->begin();
-
         $this->displaySummary($difficulty, $category, $quizType, $limit);
-
         $this->checkReplay();
     }
 
-    public function intro(): void
+    public function displayIntro(): void
     {
         note('🧑‍💻 Welcome to Quiz Central! 👩‍💻');
         note("Let's set up your quiz:");
@@ -67,17 +65,11 @@ class QuizStart extends Command
     public function begin(): array
     {
         $limit = $this->getLimit();
-
         $category = $this->getCategory();
-
         $difficulty = $this->getDifficultyLevel();
-
         $quizType = $this->getQuizType();
-
         $triviaResponse = $this->fetchQuiz($limit, $category, $difficulty, $quizType);
-
         $this->checkSuccessfulApiCall($triviaResponse);
-
         $triviaResponse = $triviaResponse['results'];
 
         $answers = [];
@@ -91,8 +83,11 @@ class QuizStart extends Command
                 $answers[$question['question']]['correct'] = $question['correct_answer'];
                 $answers[$question['question']]['incorrect'] = $question['incorrect_answers'];
 
-                $quizForm->select(label: html_entity_decode($question['question']), options: ['True', 'False'],
-                    name: $question['question']);
+                $quizForm->select(
+                    label: html_entity_decode($question['question']),
+                    options: ['True', 'False'],
+                    name: $question['question']
+                );
             }
         }
 
