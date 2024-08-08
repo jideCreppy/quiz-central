@@ -1,6 +1,16 @@
 # Quiz Central
 
 #### Utilizing the power of the Laravel 11 prompt package to create a command line based quiz application with a clean and beautiful user-friendly form based interface similar to the web.
+#### The Trivia API (https://opentdb.com/api_config.php) is used as the datasource for configuring and providing quiz data. Users can modify each setting.
+
+## About
+
+### Running the application presents the user with some initial set up instructions:
+
+1. Limit on the amount of questions (1-10)
+2. A category (Entertainment, Science & Nature or History)
+3. A difficulty level (Easy, Medium or Hard)
+4. Type of answers (True/False or Multiple)
 
 ## Dependencies
 

@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory()->create([
+        Category::factory()->create([ // Add more categories as needed. see https://opentdb.com/api_config.php for more values that can be added to the database.
             'label' => 'Entertainment (Film)',
             'value' => 11,
         ]);
