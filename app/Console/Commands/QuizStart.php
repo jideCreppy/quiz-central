@@ -37,6 +37,16 @@ class QuizStart extends Command
      */
     protected $description = 'Launch Quiz Central in the terminal';
 
+
+    protected $progressBar;
+
+    public function __construct()
+    {
+        $this->progressBar = progress('Setting up your quiz..', steps: 4, hint: "Let's set up your quiz.");
+
+        parent::__construct();
+    }
+
     /**
      * Execute the console command.
      */
@@ -44,15 +54,63 @@ class QuizStart extends Command
     {
         $this->intro();
 
-        [$difficultyLevel, $category, $quizType, $limit] = $this->begin();
+        [$difficulty, $category, $quizType, $limit] = $this->begin();
 
-        $this->displaySummary($difficultyLevel, $category, $quizType, $limit);
+        $this->displaySummary($difficulty, $category, $quizType, $limit);
 
-        if (confirm(label: 'Would you like to play again?', default: 'yes', yes: 'Yes', no: 'No')) {
-            $this->handle();
-        } else {
-            info('Thanks for playing. Goodbye 👋');
+        $this->checkReplay();
+    }
+
+    public function begin(): array
+    {
+        $limit = $this->getLimit();
+
+        $category = $this->getCategory();
+
+        $difficulty = $this->getDifficultyLevel();
+
+        $quizType = $this->getQuizType();
+
+        $triviaResponse = $this->fetchQuiz($limit, $category, $difficulty, $quizType);
+
+        $this->checkSuccessfulApiCall($triviaResponse);
+
+        $triviaResponse = $triviaResponse['results'];
+
+        $answers = [];
+        $result = [];
+        $quizForm = form();
+        $incorrectAnswers = 0;
+
+        foreach ($triviaResponse as $question) {
+            if ($quizType == 'boolean') {
+                $answers[$question['question']]['question'] = htmlspecialchars_decode($question['question']);
+                $answers[$question['question']]['correct'] = $question['correct_answer'];
+                $answers[$question['question']]['incorrect'] = $question['incorrect_answers'];
+
+                $quizForm->select(label: html_entity_decode($question['question']), options: ['True', 'False'],
+                    name: $question['question']);
+            }
         }
+
+        $quizForm = $quizForm->submit();
+
+        foreach ($answers as $question => $answer) {
+            if ($quizForm[$question] != $answer['correct']) {
+                $incorrectAnswers += 1;
+            }
+            $result[] = [html_entity_decode($question), $quizForm[$question], $answer['correct']];
+        }
+
+        $this->getResultStats($result);
+
+        if ($incorrectAnswers) {
+            warning("😔 You got {$incorrectAnswers} incorrect answer(s) out of {$limit} 🙏");
+        } else {
+            info('🎉 You got all the answers correct! Thank you for taking the quiz! 🎉');
+        }
+
+        return [$difficulty, $category, $quizType, $limit];
     }
 
     public function buildTriviaEndpoint(int $limit, int $category, string $difficultyLevel, string $quizType): string
@@ -62,6 +120,8 @@ class QuizStart extends Command
 
     public function getLimit(): int
     {
+        $this->progressBar->advance();
+
         return (int) text(
             label: 'How many questions would you like to answer?',
             placeholder: 'e.g. 10',
@@ -78,6 +138,8 @@ class QuizStart extends Command
 
     public function getCategory(): int
     {
+        $this->progressBar->advance();
+
         return (int) select(
             label: 'Select a category:',
             options: Category::all()->pluck('label', 'value'),
@@ -89,6 +151,8 @@ class QuizStart extends Command
 
     public function getDifficultyLevel(): string
     {
+        $this->progressBar->advance();
+
         return select(
             label: 'Select a difficulty:',
             options: Difficulty::all()->pluck('label', 'value'),
@@ -100,6 +164,8 @@ class QuizStart extends Command
 
     public function getQuizType(): string
     {
+        $this->progressBar->advance();
+
         return select(
             label: 'Select the type of answer for the quiz:',
             options: QuizType::all()->pluck('label', 'value'),
@@ -151,68 +217,18 @@ class QuizStart extends Command
     public function intro(): void
     {
         note('🧑‍💻 Welcome to Quiz Central! 👩‍💻');
-        note('Please select the following options:');
+        note("Let's set up your quiz:");
     }
 
-    public function begin(): array
+    /**
+     * @return void
+     */
+    public function checkReplay(): void
     {
-        $progressBar = progress('Initializing..', steps: 4, hint: "Let's set up your quiz.");
-
-        $limit = $this->getLimit();
-
-        $progressBar->advance();
-
-        $category = $this->getCategory();
-
-        $progressBar->advance();
-
-        $difficultyLevel = $this->getDifficultyLevel();
-
-        $progressBar->advance();
-
-        $quizType = $this->getQuizType();
-
-        $progressBar->advance();
-
-        $triviaResponse = $this->fetchQuiz($limit, $category, $difficultyLevel, $quizType);
-
-        $this->checkSuccessfulApiCall($triviaResponse);
-
-        $triviaResponse = $triviaResponse['results'];
-
-        $answers = [];
-        $result = [];
-        $quizForm = form();
-        $incorrectAnswers = 0;
-
-        foreach ($triviaResponse as $question) {
-            if ($quizType == 'boolean') {
-                $answers[$question['question']]['question'] = htmlspecialchars_decode($question['question']);
-                $answers[$question['question']]['correct'] = $question['correct_answer'];
-                $answers[$question['question']]['incorrect'] = $question['incorrect_answers'];
-
-                $quizForm->select(label: html_entity_decode($question['question']), options: ['True', 'False'],
-                    name: $question['question']);
-            }
-        }
-
-        $quizForm = $quizForm->submit();
-
-        foreach ($answers as $question => $answer) {
-            if ($quizForm[$question] != $answer['correct']) {
-                $incorrectAnswers += 1;
-            }
-            $result[] = [html_entity_decode($question), $quizForm[$question], $answer['correct']];
-        }
-
-        $this->getResultStats($result);
-
-        if ($incorrectAnswers) {
-            warning("😔 You got {$incorrectAnswers} incorrect answer(s) out of {$limit} 🙏");
+        if (confirm(label: 'Would you like to play again?', default: 'yes', yes: 'Yes', no: 'No')) {
+            $this->handle();
         } else {
-            info('🎉 You got all the answers correct! Thank you for taking the quiz! 🎉');
+            info('Thanks for playing. Goodbye 👋');
         }
-
-        return [$difficultyLevel, $category, $quizType, $limit];
     }
 }
