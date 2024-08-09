@@ -31,17 +31,17 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Difficulty::factory()->create([
-            'label' => 'Easy',
+            'label' => 'Easy 😌',
             'value' => 'easy',
         ]);
 
         Difficulty::factory()->create([
-            'label' => 'Medium',
+            'label' => 'Medium 😥',
             'value' => 'medium',
         ]);
 
         Difficulty::factory()->create([
-            'label' => 'Hard',
+            'label' => 'Hard 😱',
             'value' => 'hard',
         ]);
 
