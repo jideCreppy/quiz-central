@@ -14,7 +14,7 @@ trait TriviaCommands
 {
     protected function manageProgress(): void
     {
-        $this->progressBar = progress('Setting up your quiz..', steps: 4, hint: "Let's set up your quiz.");
+        $this->progressBar = progress('Setting up your quiz... ⚙️', steps: 4, hint: "Let's set up your quiz.");
     }
 
     public function getLimit(): int
