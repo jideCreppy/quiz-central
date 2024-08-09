@@ -94,6 +94,8 @@ class QuizStart extends Command
                 $answers[$questionKey]['incorrect'] = $question['incorrect_answers'];
             } else if ($quizType == 'multiple') {
                 $options = array_merge($question['incorrect_answers'], [$question['correct_answer']]);
+                $options = collect($options)->map(fn ($option) => htmlspecialchars_decode($option))->unique()->toArray();
+
                 $answers[$questionKey]['question'] = htmlspecialchars_decode($questionKey);
                 $answers[$questionKey]['correct'] = $question['correct_answer'];
                 $answers[$questionKey]['incorrect'] = $question['incorrect_answers'];
