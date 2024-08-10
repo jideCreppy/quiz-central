@@ -7,7 +7,6 @@ use App\Models\Category;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
-use Laravel\Prompts\Progress;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
@@ -140,7 +139,6 @@ class QuizStart extends Command
             } catch (ConnectionException $exception) {
                 return false;
             }
-
 
         }, 'Fetching Questions...');
     }

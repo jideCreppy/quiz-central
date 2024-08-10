@@ -49,7 +49,7 @@ DB_CONNECTION=sqlite
 ```
 
 ```php
-Run php artisan migrate:fresh --seed
+Run php artisan migrate --seed
 Run php artisan app:quiz-start
 ```
 ### Have Fun!!!
