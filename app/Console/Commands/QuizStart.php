@@ -37,12 +37,9 @@ class QuizStart extends Command
      */
     protected $description = 'Launch Quiz Central in the terminal';
 
-    protected array|Progress $progressBar;
-
     public function __construct()
     {
         parent::__construct();
-
         $this->displayIntro();
         $this->manageProgress();
     }

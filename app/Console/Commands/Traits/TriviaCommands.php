@@ -6,12 +6,15 @@ use App\Models\Category;
 use App\Models\Difficulty;
 use App\Models\QuizType;
 
+use Laravel\Prompts\Progress;
 use function Laravel\Prompts\progress;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
 trait TriviaCommands
 {
+    protected array|Progress $progressBar;
+
     protected function manageProgress(): void
     {
         $this->progressBar = progress('Setting up your quiz... ⚙️', steps: 4, hint: "Let's set up your quiz.");

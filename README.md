@@ -11,6 +11,7 @@
 2. A category (Entertainment, Science & Nature or History)
 3. A difficulty level (Easy, Medium or Hard)
 4. Type of answers (True/False or Multiple)
+5. You can go back to a previously answered question by pressing control + u (Mac)
 
 ## Dependencies
 
