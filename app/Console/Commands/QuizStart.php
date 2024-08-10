@@ -49,8 +49,7 @@ class QuizStart extends Command
      */
     public function handle(): void
     {
-        [$difficulty, $category, $quizType, $limit] = $this->begin();
-        $this->displaySummary($difficulty, $category, $quizType, $limit);
+        $this->begin();
         $this->checkReplay();
     }
 
@@ -60,7 +59,7 @@ class QuizStart extends Command
         note("Let's set up your quiz:");
     }
 
-    public function begin(): array
+    public function begin(): void
     {
         $limit = $this->getLimit();
         $category = $this->getCategory();
@@ -122,7 +121,7 @@ class QuizStart extends Command
             info('🎉 You got all the answers correct! Thank you for taking the quiz! 🎉');
         }
 
-        return [$difficulty, $category, $quizType, $limit];
+        $this->displaySummary($difficulty, $category, $quizType, $limit);
     }
 
     public function fetchQuiz(int $limit, int $category, string $difficultyLevel, string $quizType): array|bool
