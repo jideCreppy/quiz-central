@@ -15,7 +15,7 @@ trait TriviaCommands
 {
     protected array|Progress $progressBar;
 
-    protected function manageProgress(): void
+    protected function setupProgress(): void
     {
         $this->progressBar = progress('Setting up your quiz... ⚙️', steps: 4, hint: "Let's set up your quiz.");
     }

@@ -41,14 +41,14 @@ class QuizStart extends Command
      */
     public function handle(): void
     {
-        $this->displayIntro();
-        $this->manageProgress();
+        $this->showIntro();
+        $this->setupProgress();
 
         $this->begin();
         $this->checkReplay();
     }
 
-    public function displayIntro(): void
+    public function showIntro(): void
     {
         note('🧑‍💻 Welcome to Quiz Central! 👩‍💻');
         note("Let's set up your quiz:");
