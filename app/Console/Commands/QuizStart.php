@@ -36,18 +36,14 @@ class QuizStart extends Command
      */
     protected $description = 'Launch Quiz Central in the terminal';
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->displayIntro();
-        $this->manageProgress();
-    }
-
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
+        $this->displayIntro();
+        $this->manageProgress();
+
         $this->begin();
         $this->checkReplay();
     }
