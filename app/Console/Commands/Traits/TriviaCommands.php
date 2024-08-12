@@ -5,8 +5,8 @@ namespace App\Console\Commands\Traits;
 use App\Models\Category;
 use App\Models\Difficulty;
 use App\Models\QuizType;
-
 use Laravel\Prompts\Progress;
+
 use function Laravel\Prompts\progress;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;

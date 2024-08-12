@@ -73,7 +73,7 @@ class QuizStart extends Command
         $result = [];
         $quizForm = form();
         $incorrectAnswers = 0;
-;
+
         foreach ($triviaResponse as $question) {
             $options = ['True', 'False'];
 
@@ -83,7 +83,7 @@ class QuizStart extends Command
                 $answers[$questionKey]['question'] = htmlspecialchars_decode($questionKey);
                 $answers[$questionKey]['correct'] = $question['correct_answer'];
                 $answers[$questionKey]['incorrect'] = $question['incorrect_answers'];
-            } else if ($quizType == 'multiple') {
+            } elseif ($quizType == 'multiple') {
                 $options = array_merge($question['incorrect_answers'], [$question['correct_answer']]);
                 $options = collect($options)->map(fn ($option) => htmlspecialchars_decode($option))->unique()->toArray();
 
@@ -111,7 +111,7 @@ class QuizStart extends Command
         $this->getResultStats($result);
 
         if ($incorrectAnswers) {
-            warning("😔 You got {$incorrectAnswers} incorrect answer(s) out of {$limit} 🙏");
+            warning("😔 You got $incorrectAnswers incorrect answer(s) out of $limit 🙏");
         } else {
             info('🎉 You got all the answers correct! Thank you for taking the quiz! 🎉');
         }
@@ -133,6 +133,8 @@ class QuizStart extends Command
                 return $response->json();
 
             } catch (ConnectionException $exception) {
+                logger()->error($exception->getMessage());
+
                 return false;
             }
 
@@ -161,7 +163,7 @@ class QuizStart extends Command
         $category = Category::where('value', $category)->first()->label;
         $quizType = ucfirst($quizType);
 
-        outro("🚀 Your quiz settings: Quiz Limit: {$limit}, Difficulty Level: {$difficultyLevel}, Category: {$category} and Answer Type: {$quizType} 🚀");
+        outro("🚀 Your quiz settings: Quiz Limit: $limit, Difficulty Level: $difficultyLevel, Category: $category and Answer Type: $quizType 🚀");
     }
 
     public function checkReplay(): void
