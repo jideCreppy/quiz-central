@@ -21,25 +21,24 @@
 
 ## Starting the application
 1. Open your terminal (Mac, Linux or Windows WSL2)
-2. Change directory to the project folder
+2. Change directory to the project folder and run the following commands
 
 ```
-Run composer install
-```
-
-```
-Run touch database/database.sqlite
-
-If you are on a windows pc you should create the database.sqlite file in the database directory similar to the above command.
+composer install
 ```
 
 ```
-Create a copy of the .env.example and rename it to .env
+touch database/database.sqlite
+```
+#### Note: If you are on a windows pc you should create the database.sqlite file in the database directory similar to the above command.
 
-Run php artisan key:generate
+#### Create a copy of the .env.example file and rename it to .env and run:
+```
+php artisan key:generate
+```
 
-Update your database .env variables to the following:
-
+#### Update your database .env variables to the following:
+```
 DB_CONNECTION=sqlite
 # DB_HOST=127.0.0.1
 # DB_PORT=3306
@@ -48,8 +47,13 @@ DB_CONNECTION=sqlite
 # DB_PASSWORD=
 ```
 
+#### To migrate and seed the database run:
 ```
-Run php artisan migrate --seed
-Run php artisan app:quiz-start
+php artisan migrate --seed
+```
+
+#### To start the app in the terminal run:
+```
+php artisan app:quiz-start
 ```
 ### Have Fun!!!
