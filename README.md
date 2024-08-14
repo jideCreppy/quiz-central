@@ -23,17 +23,17 @@
 1. Open your terminal (Mac, Linux or Windows WSL2)
 2. Change directory to the project folder
 
-```php
+```
 Run composer install
 ```
 
-```php
+```
 Run touch database/database.sqlite
 
 If you are on a windows pc you should create the database.sqlite file in the database directory similar to the above command.
 ```
 
-```php
+```
 Create a copy of the .env.example and rename it to .env
 
 Run php artisan key:generate
@@ -48,7 +48,7 @@ DB_CONNECTION=sqlite
 # DB_PASSWORD=
 ```
 
-```php
+```
 Run php artisan migrate --seed
 Run php artisan app:quiz-start
 ```
