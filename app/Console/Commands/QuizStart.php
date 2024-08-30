@@ -22,7 +22,7 @@ class QuizStart extends Command
      *
      * @var string
      */
-    protected $description = 'Launch Quiz Central in the terminal';
+    protected $description = 'Begin quiz';
 
     /**
      * Execute the console command.
